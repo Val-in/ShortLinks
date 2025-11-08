@@ -25,7 +25,6 @@ public class CommandProcessor {
         LinkCleaner cleaner = new LinkCleaner();
         cleaner.start(store, config);
 
-        // Приветствие
         System.out.println("====================================");
         System.out.println("   URL Shortener CLI");
         System.out.println("====================================");
@@ -33,14 +32,13 @@ public class CommandProcessor {
         System.out.println("Введите команду (help - список команд)");
         System.out.println("------------------------------------");
 
-        // Основной цикл команд
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.print("cmd> ");
             String line = sc.nextLine().trim();
             if (line.isEmpty()) continue;
 
-            String[] parts = line.split("\\s+", 2);
+            String[] parts = line.split("\\s+");
             String cmd = parts[0].toLowerCase(Locale.ROOT);
             String arg = parts.length > 1 ? parts[1].trim() : "";
 
@@ -67,7 +65,6 @@ public class CommandProcessor {
         }
     }
 
-    // Справка
     private void printHelp() {
         System.out.println("""
             Доступные команды:
@@ -80,11 +77,10 @@ public class CommandProcessor {
             """);
     }
 
-    // Создание ссылки
     private void handleCreate(UrlShortener s, UUID u, String arg) {
         String[] p = arg.split("\\s+");
         if (p.length == 0) {
-            System.out.println("Usage: create <url> [maxClicks] [ttlMinutes]");
+            System.out.println("Использование: create <url> [maxClicks] [ttlMinutes]");
             return;
         }
 
@@ -96,7 +92,6 @@ public class CommandProcessor {
         System.out.println("Создано: " + code + " -> " + url);
     }
 
-    // Список ссылок пользователя
     private void handleList(UrlShortener s, UUID u) {
         for (String c : s.list(u)) {
             LinkModel l = s.get(c);
@@ -112,7 +107,7 @@ public class CommandProcessor {
 
     private void handleEdit(String[] parts) {
         if (parts.length < 4) {
-            System.out.println("Использование: edit <code> <new_maxClicks> <new_ttl_minutes>");
+            System.out.println("Использование: edit <code> [maxClicks] [ttlMinutes]");
             return;
         }
 
@@ -127,7 +122,7 @@ public class CommandProcessor {
         }
 
         if (!link.owner.equals(currentUser)) {
-            System.out.println("⛔ Только владелец может изменять параметры ссылки");
+            System.out.println("⛔ Только владелец может изменять параметры ссылки!");
             return;
         }
 
@@ -135,7 +130,7 @@ public class CommandProcessor {
         link.maxClicks = newMaxClicks;
         link.expiresAt = newExpiresAt;
 
-        store.put(code, link); // сохраняем изменения
+        store.put(code, link);
         System.out.println("✅ Параметры обновлены: лимит = " + newMaxClicks +
                 ", TTL = " + newTtlMinutes + " мин.");
     }
@@ -149,30 +144,20 @@ public class CommandProcessor {
 
         long now = System.currentTimeMillis();
 
-        // Проверка TTL
         if (l.expiresAt > 0 && now > l.expiresAt) {
-            System.out.println("⚠ Срок действия ссылки истёк!");
+            System.out.println("⛔ Срок действия ссылки истёк!");
             s.delete(code);
             return;
         }
 
-        // Проверка лимита кликов
-        if (l.maxClicks > 0 && l.clicks >= l.maxClicks) {
-            System.out.println("⚠ Лимит переходов исчерпан!");
-            return;
-        }
-
-        // Увеличиваем счётчик кликов
         l.clicks++;
-        s.update(l); // важно: сохранить изменения в store
-        System.out.println("✅ Переход #" + l.clicks);
+        s.update(l);
+        System.out.println("Переход #" + l.clicks);
 
-        // Если только что достигнут лимит — уведомляем
         if (l.maxClicks > 0 && l.clicks == l.maxClicks) {
-            System.out.println("⚠ Достигнут лимит переходов, ссылка больше не активна!");
+            System.out.println("⛔ Достигнут лимит переходов, ссылка больше не активна!");
         }
 
-        // Открываем ссылку
         if (Desktop.isDesktopSupported()) {
             Desktop.getDesktop().browse(new URI(l.original));
         } else {
@@ -180,7 +165,6 @@ public class CommandProcessor {
         }
     }
 
-    // Удаление ссылки (только для владельца)
     private void handleDelete(UrlShortener s, UUID currentUser, String code) {
         LinkModel l = s.get(code);
         if (l == null) {

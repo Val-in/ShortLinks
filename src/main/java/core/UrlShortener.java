@@ -19,15 +19,12 @@ public class UrlShortener {
     public String create(UUID owner, String url, Integer maxClicks, Long ttlMinutes) {
         validateUrl(owner, url);
 
-        // TTL из конфига
         long ttl = (ttlMinutes != null && ttlMinutes > 0)
                 ? TimeUnit.MINUTES.toMillis(ttlMinutes)
                 : TimeUnit.MINUTES.toMillis(config.getDefaultTTLMinutes());
 
-        // Макс кликов из конфига
         int max = (maxClicks != null) ? maxClicks : config.getMaxClicksDefault();
 
-        // Генерация уникального кода
         String code = generateShortCode();
         while (store.get(code) != null) {
             code = generateShortCode();

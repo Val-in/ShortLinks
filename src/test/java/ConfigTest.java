@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfigTest {
     @Test
     void loadsDefaultsWhenMissing() {
-        Config c = new Config(); // использует resources/config.properties
+        Config c = new Config();
         assertTrue(c.getMaxUrlLength() > 0);
         assertTrue(c.getShortCodeLength() > 0);
     }
