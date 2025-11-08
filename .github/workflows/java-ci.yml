@@ -22,12 +22,12 @@ jobs:
 
       - name: Build project
         working-directory: ${{ github.workspace }}
-        run: gradlew.bat build --no-daemon
+        run: .\gradlew.bat build --no-daemon
 
       - name: Run tests
         working-directory: ${{ github.workspace }}
-        run: gradlew.bat test --no-daemon
+        run: .\gradlew.bat test --no-daemon
 
       - name: Check code formatting (Spotless)
         working-directory: ${{ github.workspace }}
-        run: gradlew.bat spotlessCheck --no-daemon
+        run: .\gradlew.bat spotlessCheck --no-daemon
