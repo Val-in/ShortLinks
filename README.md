@@ -19,27 +19,25 @@
 
 ## Архитектура проекта
 
-`src`<br>
-  `├── main`<br>
-    `├── cli`<br>
-    `│    ├── App.java`               // Точка входа, загрузка UUID и запуск CLI<br>
-    `│    └── CommandProcessor.java`  // Парсер и обработчик пользовательских команд<br>
-    `│`<br>
-    `├── core`<br>
-    `│    ├── Config.java`           // Загрузка конфигурации из config.properties<br>
-    `│    ├── UrlShortener.java`      // Основная бизнес-логика сокращения ссылок<br>
-    `│    ├── LinkModel.java`         // Модель данных для одной короткой ссылки<br>
-    `│    ├── LinkCleaner.java`       // Фоновый поток очистки просроченных/исчерпанных ссылок<br>
-    `│    └── ValidationException.java` // Исключения валидации входных данных<br>
-    `│`<br>
-    `├── storage`<br>
-    `│    └── InMemoryStore.java`    // Хранилище ссылок (в памяти, с индексом по пользователям)<br>
-    `│`<br>
-    `├── util`<br>
-    `│    └── FileUtils.java`         // Работа с файловой системой (UUID, конфиги)<br>
-    `│`<br>
-    `└── resources`<br>
-         `└── config.properties`      // Настройки TTL, лимитов, путей, уведомлений<br>
+`├── cli`<br>
+`│    ├── App.java`               // Точка входа, загрузка UUID и запуск CLI<br>
+`│    └── CommandProcessor.java`  // Парсер и обработчик пользовательских команд<br>
+`│`<br>
+`├── core`<br>
+`│    ├── Config.java`           // Загрузка конфигурации из config.properties<br>
+`│    ├── UrlShortener.java`      // Основная бизнес-логика сокращения ссылок<br>
+`│    ├── LinkModel.java`         // Модель данных для одной короткой ссылки<br>
+`│    ├── LinkCleaner.java`       // Фоновый поток очистки просроченных/исчерпанных ссылок<br>
+`│    └── ValidationException.java` // Исключения валидации входных данных<br>
+`│`<br>
+`├── storage`<br>
+`│    └── InMemoryStore.java`    // Хранилище ссылок (в памяти, с индексом по пользователям)<br>
+`│`<br>
+`├── util`<br>
+`│    └── FileUtils.java`         // Работа с файловой системой (UUID, конфиги)<br>
+`│`<br>
+`└── resources`<br>
+     `└── config.properties`      // Настройки TTL, лимитов, путей, уведомлений<br>
 
 ---
 
